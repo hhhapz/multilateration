@@ -6,7 +6,11 @@ For more information on multilateration, see the [Wikipedia article on Multilate
 
 The api is based on meters for positions, and has nanosecond precision.
 
-## Installation
+## Limitations
+
+- The 2D multilateration implementation works very well for any input, including colinear points, however for most desirable results, the stations should not be colinear or clumped together, which might cause inaccuracies or completely incorrect results for extreme cases
+
+## Usage
 
 ```bash
 go get github.com/hhhapz/multilateration
