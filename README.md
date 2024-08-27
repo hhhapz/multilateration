@@ -1,5 +1,7 @@
 # Multilateration Library
 
+[![Package Reference](https://pkg.go.dev/badge/github.com/hhhapz/multilateration)](https://pkg.go.dev/github.com/hhhapz/multilateration)
+
 This Go library provides functionality for **multilateration**, a technique used to determine the position of an object based on time difference of arrival (TDOA) measurements from multiple known positions (sensors).
 
 For more information on multilateration, see the [Wikipedia article on Multilateration](https://en.wikipedia.org/wiki/Multilateration).
