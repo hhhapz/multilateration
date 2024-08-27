@@ -8,7 +8,7 @@ import (
 	"gonum.org/v1/gonum/stat/combin"
 )
 
-var solver = nonlin.NewtonKrylov{
+var solver2D = nonlin.NewtonKrylov{
 	Maxiter:  1000,
 	StepSize: 0.01,
 	Tol:      0.01, // 1 cm
@@ -72,7 +72,7 @@ func multilaterate2D(p1, p2, p3 TimePos2D) (TimePos2D, error) {
 
 	avgX := (p1.X + p2.X + p3.X) / 3
 	avgY := (p1.Y + p2.Y + p3.Y) / 3
-	res, err := solver.Solve(p, []float64{avgX, avgY})
+	res, err := solver2D.Solve(p, []float64{avgX, avgY})
 	if err != nil {
 		return TimePos2D{}, err
 	}

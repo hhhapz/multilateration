@@ -6,7 +6,7 @@ import (
 	multilat "github.com/hhhapz/multilateration"
 )
 
-func Example2D() {
+func ExampleMultilaterate2D() {
 	n := 0.0 // source emission time
 	source := multilat.TimePos2D{T: n, X: 50, Y: 50}
 
