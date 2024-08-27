@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-	"time"
 )
 
 func Test2D(t *testing.T) {
-	n := time.Now() // time of emission
+	n := 0.0 // time of emission
 	var tests = []struct {
 		source   Pos2D
 		stations []Pos2D
@@ -71,7 +70,7 @@ func Test2D(t *testing.T) {
 		if err != nil {
 			t.Errorf("could not multilaterate: %v", err)
 		}
-		t.Logf("multilaterated: (%.2f, %.2f) with time diff %s", source.X, source.Y, n.Sub(source.T))
+		t.Logf("multilaterated: (%.2f, %.2f) with time diff %v", source.X, source.Y, n-source.T)
 	}
 
 }

@@ -3,7 +3,6 @@ package multilateration
 import (
 	"fmt"
 	"math"
-	"time"
 
 	"github.com/davidkleiven/gononlin/nonlin"
 	"gonum.org/v1/gonum/stat/combin"
@@ -20,7 +19,7 @@ type pos2D interface {
 }
 
 type Pos2D struct {
-	X, Y float64
+	X, Y float64 // in meters
 }
 
 func (p Pos2D) XY() Pos2D {
@@ -28,8 +27,8 @@ func (p Pos2D) XY() Pos2D {
 }
 
 type TimePos2D struct {
-	T    time.Time
-	X, Y float64
+	T    float64 // in seconds
+	X, Y float64 // in meters
 }
 
 func (t TimePos2D) XY() Pos2D {
@@ -41,9 +40,9 @@ func Multilaterate2D(pos ...TimePos2D) (TimePos2D, error) {
 		return TimePos2D{}, ErrNotEnoughPoints
 	}
 	combs := combin.Combinations(len(pos), 3)
-	ref := pos[0].T.UnixNano()
+	ref := pos[0].T
 	averaged := TimePos2D{X: 0, Y: 0}
-	var averagedT int64
+	var averagedT float64
 	for _, comb := range combs {
 		res, err := multilaterate2D(pos[comb[0]], pos[comb[1]], pos[comb[2]])
 		if err != nil {
@@ -51,18 +50,18 @@ func Multilaterate2D(pos ...TimePos2D) (TimePos2D, error) {
 		}
 		averaged.X += res.X
 		averaged.Y += res.Y
-		averagedT += ref - res.T.UnixNano()
+		averagedT += ref - res.T
 	}
 	averaged.X /= float64(len(combs))
 	averaged.Y /= float64(len(combs))
-	averagedT /= int64(len(combs))
-	averaged.T = time.Unix((ref-averagedT)/int64(time.Second), (ref-averagedT)%int64(time.Second))
+	averagedT /= float64(len(combs))
+	averaged.T = ref - averagedT
 	return averaged, nil
 }
 
 func multilaterate2D(p1, p2, p3 TimePos2D) (TimePos2D, error) {
-	t_12 := p1.T.Sub(p2.T).Seconds()
-	t_13 := p1.T.Sub(p3.T).Seconds()
+	t_12 := p1.T - p2.T
+	t_13 := p1.T - p3.T
 	p := nonlin.Problem{
 		F: func(out, x []float64) {
 			p := Pos2D{x[0], x[1]}
@@ -79,7 +78,7 @@ func multilaterate2D(p1, p2, p3 TimePos2D) (TimePos2D, error) {
 	}
 	pos := TimePos2D{X: res.X[0], Y: res.X[1]}
 	dist := dist2(pos, p1)
-	t := p1.T.Add(-mToD(dist))
+	t := p1.T - mToD(dist)
 	pos.T = t
 	return pos, nil
 }
@@ -88,7 +87,7 @@ func Simulate2D(source TimePos2D, stations ...Pos2D) []TimePos2D {
 	res := make([]TimePos2D, len(stations))
 	for i, s := range stations {
 		res[i] = TimePos2D{
-			T: source.T.Add(mToD(dist2(source, s))),
+			T: source.T + mToD(dist2(source, s)),
 			X: s.X,
 			Y: s.Y,
 		}

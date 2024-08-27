@@ -2,13 +2,12 @@ package multilateration_test
 
 import (
 	"fmt"
-	"time"
 
 	multilat "github.com/hhhapz/multilateration"
 )
 
 func Example2D() {
-	n := time.Now() // source emission time
+	n := 0.0 // source emission time
 	source := multilat.TimePos2D{T: n, X: 50, Y: 50}
 
 	// generate positions based on source and stations. This simulates when stations will
@@ -25,11 +24,11 @@ func Example2D() {
 		fmt.Printf("error: could not multilaterate: %v\n", err)
 		return
 	}
-	fmt.Printf("multilaterated: (%.2f, %.2f) with time diff %s\n", source.X, source.Y, n.Sub(source.T))
+	fmt.Printf("multilaterated: (%.2f, %.2f)\n", source.X, source.Y)
 	// Output:
 	// source: (50.00, 50.00)
 	// station: (0.00, 0.00)
 	// station: (0.00, 100.00)
 	// station: (100.00, 0.00)
-	// multilaterated: (50.00, 50.00) with time diff 0s
+	// multilaterated: (50.00, 50.00)
 }
