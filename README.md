@@ -10,6 +10,8 @@ The api is based on meters for positions, and has nanosecond precision.
 
 - The 2D multilateration implementation works very well for any input, including colinear points, however for most desirable results, the stations should not be colinear or clumped together, which might cause inaccuracies or completely incorrect results for extreme cases
 
+- The 3d multilateration implementation similarly works well, however is slightly tighter on its support for clumped and coplanar inputs. However, if inputs are within similar distances from each other, it is still very precise.
+
 ## Usage
 
 ```bash
